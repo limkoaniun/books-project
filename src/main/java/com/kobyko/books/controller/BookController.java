@@ -1,13 +1,27 @@
 package com.kobyko.books.controller;
 
+import com.kobyko.books.entity.Book;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class BookController {
 
+    private final List<Book> books = new ArrayList<>();
+
+    public BookController() {
+        initialiseBooks();
+    }
+
+    private void initialiseBooks() {
+        books.addAll(List.of(new Book("The Hobbit", "J.R.R. Tolkien", "Fantasy"), new Book("To Kill a Mockingbird", "Harper Lee", "Fiction"), new Book("1984", "George Orwell", "Dystopian"), new Book("The Great Gatsby", "F. Scott Fitzgerald", "Classic"), new Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy")));
+    }
+
     @GetMapping("/api/v1/books")
-    public String firstAPI(){
-        return "Hello World";
+    public List<Book> getBooks () {
+        return books;
     }
 }
