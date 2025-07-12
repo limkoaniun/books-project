@@ -22,7 +22,7 @@ public class BookController {
     }
 
     @GetMapping("/api/v1/books")
-    public List<Book> getBooks() {
+    public List<Book> getAllBooks() {
         return books;
     }
 
