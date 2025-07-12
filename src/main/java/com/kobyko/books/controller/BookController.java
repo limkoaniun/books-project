@@ -59,13 +59,9 @@ public class BookController {
             return books;
         }
 
-        List<Book> filteredBooks = new ArrayList<>();
-        for (Book book : books) {
-            if(book.getCategory().equalsIgnoreCase(category)) {
-                filteredBooks.add(book);
-            }
-        }
-        return filteredBooks;
+        return books.stream()
+                .filter(book -> book.getCategory().equalsIgnoreCase(category))
+                .toList();
     }
 
     /**
