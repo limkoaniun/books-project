@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST controller for book operations.
+ * Provides API endpoints for retrieving and searching books.
+ */
 @RestController
 public class BookController {
 
@@ -18,6 +22,9 @@ public class BookController {
         initialiseBooks();
     }
 
+    /**
+     * Loads sample books into the collection.
+     */
     private void initialiseBooks() {
         books.addAll(
                 List.of(
@@ -30,11 +37,22 @@ public class BookController {
         );
     }
 
+    /**
+     * Gets all books in the collection.
+     *
+     * @return list of all books
+     */
     @GetMapping("/api/v1/books")
     public List<Book> getAllBooks() {
         return books;
     }
 
+    /**
+     * Gets books with optional category filtering.
+     *
+     * @param category the category to filter by (optional)
+     * @return all books if no category specified, filtered books otherwise
+     */
     @GetMapping("/api/v2/books")
     public List<Book> getBooksByCategory(@RequestParam(required = false) String category) {
         if(category == null || category.isEmpty()) {
@@ -50,6 +68,12 @@ public class BookController {
         return filteredBooks;
     }
 
+    /**
+     * Finds a book by title (case-insensitive).
+     *
+     * @param title the book title to search for
+     * @return the book if found, null otherwise
+     */
     @GetMapping("/api/v1/book/{title}")
     public Book getBookByTitle(@PathVariable String title) {
         return books.stream()
