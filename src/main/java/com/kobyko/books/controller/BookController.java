@@ -1,6 +1,7 @@
 package com.kobyko.books.controller;
 
 import com.kobyko.books.entity.Book;
+import com.kobyko.books.request.BookRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -72,12 +73,23 @@ public class BookController {
     }
 
     @PostMapping
-    public void createBook(@RequestBody Book newBook) {
-        boolean isNewBook = books.stream()
-                .noneMatch(book -> book.getTitle().equalsIgnoreCase(newBook.getTitle()));
-        if (isNewBook) {
-            books.add(newBook);
+    public void createBook(@RequestBody BookRequest bookRequest) {
+        long id;
+        if (books.isEmpty()) {
+            id = 1;
+        } else {
+            id = books.get(books.size() - 1).getId() + 1;
         }
+
+        Book book = new Book(
+                id,
+                bookRequest.getTitle(),
+                bookRequest.getAuthor(),
+                bookRequest.getCategory(),
+                bookRequest.getRating()
+        );
+
+        books.add(book);
     }
 
     @PutMapping("/{id}")
