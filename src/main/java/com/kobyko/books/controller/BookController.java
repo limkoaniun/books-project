@@ -11,6 +11,7 @@ import java.util.List;
  * Provides API endpoints for retrieving and searching books.
  */
 @RestController
+@RequestMapping("/api/books")
 public class BookController {
 
     private final List<Book> books = new ArrayList<>();
@@ -25,23 +26,18 @@ public class BookController {
     private void initialiseBooks() {
         books.addAll(
                 List.of(
-                        new Book("The Hobbit", "J.R.R. Tolkien", "Fantasy"),
-                        new Book("To Kill a Mockingbird", "Harper Lee", "Fiction"),
-                        new Book("1984", "George Orwell", "Dystopian"),
-                        new Book("The Great Gatsby", "F. Scott Fitzgerald", "Classic"),
-                        new Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy")
+                        new Book(1, "The Hobbit", "J.R.R. Tolkien", "Fantasy", 5),
+                        new Book(2, "To Kill a Mockingbird", "Harper Lee", "Fiction", 2),
+                        new Book(3, "1984", "George Orwell", "Dystopian", 3),
+                        new Book(4, "The Great Gatsby", "F. Scott Fitzgerald", "Classic", 1),
+                        new Book(5, "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy", 4),
+                        new Book(6, "Dune", "Frank Herbert", "Science Fiction", 3),
+                        new Book(7, "The Catcher in the Rye", "J.D. Salinger", "Fiction", 1),
+                        new Book(8, "Brave New World", "Aldous Huxley", "Dystopian", 4),
+                        new Book(9, "Pride and Prejudice", "Jane Austen", "Romance", 5),
+                        new Book(10, "The Lord of the Rings", "J.R.R. Tolkien", "Fantasy", 2)
                 )
         );
-    }
-
-    /**
-     * Gets all books in the collection.
-     *
-     * @return list of all books
-     */
-    @GetMapping("/api/v1/books")
-    public List<Book> getAllBooks() {
-        return books;
     }
 
     /**
@@ -50,9 +46,9 @@ public class BookController {
      * @param category the category to filter by (optional)
      * @return all books if no category specified, filtered books otherwise
      */
-    @GetMapping("/api/v2/books")
-    public List<Book> getBooksByCategory(@RequestParam(required = false) String category) {
-        if(category == null || category.isEmpty()) {
+    @GetMapping
+    public List<Book> getBooks(@RequestParam(required = false) String category) {
+        if (category == null || category.isEmpty()) {
             return books;
         }
 
@@ -67,7 +63,7 @@ public class BookController {
      * @param title the book title to search for
      * @return the book if found, null otherwise
      */
-    @GetMapping("/api/v1/book/{title}")
+    @GetMapping("/{title}")
     public Book getBookByTitle(@PathVariable String title) {
         return books.stream()
                 .filter(book -> book.getTitle().equalsIgnoreCase(title))
@@ -75,7 +71,7 @@ public class BookController {
                 .orElse(null);
     }
 
-    @PostMapping("/api/v1/books")
+    @PostMapping
     public void createBook(@RequestBody Book newBook) {
         boolean isNewBook = books.stream()
                 .noneMatch(book -> book.getTitle().equalsIgnoreCase(newBook.getTitle()));
@@ -84,18 +80,18 @@ public class BookController {
         }
     }
 
-    @PutMapping("/api/books/{title}")
+    @PutMapping("/{title}")
     public void updateBook(@PathVariable String title, @RequestBody Book updateBook) {
         for (int i = 0; i < books.size(); i++) {
-           if (books.get(i).getTitle().equalsIgnoreCase(title)){
-               books.set(i, updateBook);
-               return;
-           }
+            if (books.get(i).getTitle().equalsIgnoreCase(title)) {
+                books.set(i, updateBook);
+                return;
+            }
         }
     }
 
-    @DeleteMapping("/api/books/{title}")
-    public void deleteBook(@PathVariable String title){
+    @DeleteMapping("/{title}")
+    public void deleteBook(@PathVariable String title) {
         books.removeIf(book -> book.getTitle().equalsIgnoreCase(title));
     }
 }
